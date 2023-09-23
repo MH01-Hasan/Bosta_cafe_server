@@ -13,7 +13,7 @@ router.post(
   // auth(ENUM_USER_ROLE.ADMIN),
   ProductController.createProduct,
 );
-// router.get('/', CategoriController.getAllCategori)
+// router.get('/', categoryController.getAllcategory)
 
 
 router.get('/:id', ProductController.findSingleProduct,);

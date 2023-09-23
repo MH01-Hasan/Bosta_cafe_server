@@ -22,14 +22,14 @@ model User {
   @@map("users")
 }
 
-model Categori {
+model Category {
   id        String    @id @default(uuid())
   name      String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   products   Product[]
 
-  @@map("categories")
+  @@map("categoryes")
 }
 
 model Product {
@@ -41,8 +41,8 @@ model Product {
 
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  categoriId String
-  categori   Categori @relation(fields: [categoriId], references: [id])
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
 
   @@map("products")
 }
