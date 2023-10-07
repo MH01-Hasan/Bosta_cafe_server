@@ -2,12 +2,14 @@ import { Category } from '@prisma/client';
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
+import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
+import { CategoryFilterFileds } from './category.contants';
 import { categoryService } from './category.service';
 
 const createcategory = catchAsync(async (req: Request, res: Response) => {
   const result = await categoryService.createcategory(req.body);
-  sendResponse(res, {
+  sendResponse<Category>(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'category created successful',
@@ -15,15 +17,20 @@ const createcategory = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getAllcategory = catchAsync(async (req: Request, res: Response) => {
-  const result = await categoryService.getAllcategory();
-  sendResponse<Category[]>(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'category retrieved successful',
-    data: result,
-  });
-});
+const getAllcategory = catchAsync(async (req:Request,res:Response)=>{
+  const filters = pick(req.query,CategoryFilterFileds);
+   const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
+   const result = await categoryService.getAllcategory(filters, options);
+   sendResponse<Category[]>(res,{ 
+    statusCode:httpStatus.OK,
+    success:true,
+    message:"Product find successfully",
+      meta: result?.meta,
+      data:result.data
+
+  })
+
+})
 
 const getSinglecategory = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;

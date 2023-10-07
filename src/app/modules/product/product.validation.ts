@@ -12,10 +12,14 @@ const create = z.object({
         flavor: z.string({
             required_error: "flavor is required"
         }),
+        productImage: z.string({
+            required_error: "productImage is required"
+        }),
         discount: z.number().optional(),
         categoryId: z.string({
             required_error: "categoryId is required"
         }),
+       
     })
 })
 

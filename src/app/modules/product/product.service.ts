@@ -13,7 +13,9 @@ const createProduct = async (payload:Product ): Promise<Product> => {
     return result;
   };
 
-  const getAllcategory = async (
+
+
+  const getAllproduct = async (
 
     filters:IProductFilterRequest,
     options:IPaginationOptions
@@ -50,6 +52,9 @@ const createProduct = async (payload:Product ): Promise<Product> => {
 
     const result = await prisma.product.findMany({
         where: whereConditons,
+        include: {
+          category: true,
+        },
         skip,
         take: limit,
         orderBy: options.sortBy && options.sortOrder
@@ -127,7 +132,7 @@ const deleteSingleProduct = async (id: string): Promise<Product> => {
     updateSingleProduct,
     deleteSingleProduct,
     findSingleProduct,
-    getAllcategory
+    getAllproduct
     
   };
   

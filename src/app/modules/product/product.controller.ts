@@ -20,10 +20,10 @@ const createProduct = catchAsync(async (req:Request,res:Response)=>{
 
 
 
-const getAllcategory = catchAsync(async (req:Request,res:Response)=>{
+const getAllproduct = catchAsync(async (req:Request,res:Response)=>{
   const filters = pick(req.query,ProductFilterFileds);
    const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
-   const result = await ProductService.getAllcategory(filters, options);
+   const result = await ProductService.getAllproduct(filters, options);
    sendResponse<Product[]>(res,{ 
     statusCode:httpStatus.OK,
     success:true,
@@ -85,7 +85,7 @@ const deleteSingleProduct = catchAsync(async (req:Request,res:Response)=>{
     updateSingleProduct,
     deleteSingleProduct,
     findSingleProduct,
-    getAllcategory
+    getAllproduct
     
   };
   

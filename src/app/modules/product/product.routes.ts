@@ -6,6 +6,10 @@ import { ProductValidation } from './product.validation';
 
 
 const router = express.Router();
+// FileUploadHelper.upload.single('file'),
+// (req: Request, res: Response, next: NextFunction) => {
+//     req.body = ProductValidation.create.parse(JSON.parse(req.body.data))
+//     return ProductController.createProduct(req, res, next)
 
 router.post(
   '/',
@@ -13,7 +17,7 @@ router.post(
   // auth(ENUM_USER_ROLE.ADMIN),
   ProductController.createProduct,
 );
-// router.get('/', categoryController.getAllcategory)
+router.get('/', ProductController.getAllproduct)
 
 
 router.get('/:id', ProductController.findSingleProduct,);
