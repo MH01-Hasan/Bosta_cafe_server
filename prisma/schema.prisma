@@ -33,18 +33,17 @@ model Category {
 }
 
 model Product {
-  id         String   @id @default(uuid())
-  name       String
-  price      Int
-  flavor     String?
+  id           String  @id @default(uuid())
+  name         String
+  price        Int
+  flavor       String?
   productImage String
-  discount   Int?     @default(0)
-
+  discount     Int?    @default(0)
+  size         String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id])
- 
 
   @@map("products")
 }
