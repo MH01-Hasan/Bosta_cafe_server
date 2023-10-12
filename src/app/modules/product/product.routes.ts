@@ -6,11 +6,6 @@ import { ProductValidation } from './product.validation';
 
 
 const router = express.Router();
-// FileUploadHelper.upload.single('file'),
-// (req: Request, res: Response, next: NextFunction) => {
-//     req.body = ProductValidation.create.parse(JSON.parse(req.body.data))
-//     return ProductController.createProduct(req, res, next)
-
 router.post(
   '/',
   validateRequest(ProductValidation.create),

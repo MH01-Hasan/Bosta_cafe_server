@@ -6,16 +6,16 @@ const create = z.object({
             required_error: "name is required"
         }),
       
-        price: z.number({
+        price: z.string({
             required_error: "price is required"
         }),
         flavor: z.string({
             required_error: "flavor is required"
         }),
-        productImage: z.string({
-            required_error: "productImage is required"
+        productImage: z.object({
+            
         }),
-        discount: z.number().optional(),
+        discount: z.string().optional(),
         size: z.string().optional(),
         categoryId: z.string({
             required_error: "categoryId is required"
@@ -27,9 +27,9 @@ const create = z.object({
 const update = z.object({
     body: z.object({
         name: z.string().optional(),
-        price: z.number().optional(),
+        price: z.string().optional(),
         flavor: z.string().optional(),
-        discount: z.number().optional(),
+        discount: z.string().optional(),
         size: z.string().optional(),
         categoryId: z.string().optional(),
     })

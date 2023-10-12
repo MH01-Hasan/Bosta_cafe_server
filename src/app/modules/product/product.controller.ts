@@ -8,7 +8,7 @@ import { ProductFilterFileds } from "./product.contants";
 import { ProductService } from "./product.service";
 
 const createProduct = catchAsync(async (req:Request,res:Response)=>{
-    const result = await ProductService.createProduct(req.body);
+    const result = await ProductService.createProduct(req?.body);
     sendResponse<Product>(res,{
         statusCode:httpStatus.OK,
         success:true,

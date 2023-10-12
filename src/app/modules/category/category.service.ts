@@ -62,7 +62,7 @@ const getAllcategory = async (
           }
   });
 
-  const total = await prisma.product.count();
+  const total = await prisma.category.count();
 
   return {
       meta: {
