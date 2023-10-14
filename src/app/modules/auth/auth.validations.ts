@@ -25,7 +25,22 @@ const create = z.object({
       
     })
 })
+
+const Userupdate = z.object({
+    body: z.object({
+        username: z.string().optional(),
+        password: z.string().optional(),
+        email: z.string().optional(),
+        role: z.string().optional(),
+        contactNo: z.string().optional(),
+        address: z.string().optional(),
+        profileImg:z.string().optional(),
+      
+    })
+})
+
 export const AuthValidation = {
-    create
+    create,
+    Userupdate
     
 }

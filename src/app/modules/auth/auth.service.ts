@@ -11,6 +11,7 @@ import { prisma } from '../../../shared/prisma';
 import { ILoginUser, ILoginUserResponse } from './auth.interface';
 
 export const insertIntoDB = async (payload: User) => {
+  
   const isExist = await prisma.user.findFirst({
     where: {
       username: payload.username,
@@ -34,6 +35,9 @@ export const insertIntoDB = async (payload: User) => {
 
   return userWithoutPassword;
 };
+
+
+
 const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   const { username, password } = payload;
 
