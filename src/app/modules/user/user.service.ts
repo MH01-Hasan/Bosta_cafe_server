@@ -53,7 +53,7 @@ const getAllUser = async (
             }
     });
     const total = await prisma.user.count();
- 
+   
     return {
         meta: {
             page,

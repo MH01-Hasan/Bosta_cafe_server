@@ -97,6 +97,9 @@ const getAllproduct = async (
 
 
 const updateSingleProduct = async (id: string, payload: Partial<Product>): Promise<Product> => {
+
+
+ 
   const result = await prisma.product.update({
     where: {
       id,
@@ -109,6 +112,7 @@ const updateSingleProduct = async (id: string, payload: Partial<Product>): Promi
       category: true,
     },
   });
+
   return result;
 };
 

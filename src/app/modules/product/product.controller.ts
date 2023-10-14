@@ -1,6 +1,7 @@
 import { Product } from "@prisma/client";
 import { Request, Response } from "express";
 import httpStatus from "http-status";
+import { cloudinaryDestroy } from "../../../helpers/FileUploadHelper";
 import catchAsync from "../../../shared/catchAsync";
 import pick from "../../../shared/pick";
 import sendResponse from "../../../shared/sendResponse";
@@ -52,8 +53,15 @@ const findSingleProduct = catchAsync(async (req:Request,res:Response)=>{
 
 
 const updateSingleProduct = catchAsync(async (req:Request,res:Response)=>{
+  const {oldproductimage} = req.body
+  if(oldproductimage?.mediaId){
+    await cloudinaryDestroy(oldproductimage?.mediaId)
+
+  }
+  const body = req.body;
+  delete req.body.oldproductimage
   const {id}= req.params
-  const result = await ProductService.updateSingleProduct(id,req.body);
+  const result = await ProductService.updateSingleProduct(id,body);
   sendResponse<Product>(res,{ 
     statusCode:httpStatus.OK,
     success:true,
