@@ -10,11 +10,12 @@ datasource db {
 model User {
   id         String   @id @default(uuid())
   username   String   @unique
-  password   String @ignore
+  password   String  
   email      String?
   role       RoleUser @default(admin)
   contactNo  String
   address    String
+  status     Status  @default(open)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
@@ -52,4 +53,8 @@ model Product {
 enum RoleUser {
   admin
   saler
+}
+enum Status {
+  open
+  close
 }

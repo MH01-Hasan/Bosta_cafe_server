@@ -94,6 +94,7 @@ const updateSinglecategory = async (id: string, payload: Partial<Category>) => {
   });
   return category;
 };
+
 const deleteSinglecategory = async (id: string) => {
   const category = await prisma.category.delete({
     where: {

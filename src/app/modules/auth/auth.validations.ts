@@ -19,9 +19,10 @@ const create = z.object({
         address: z.string({
             required_error: "address is required"
         }),
-        profileImg: z.string({
-            required_error: "profileImg is required"
+        status: z.string({
+            required_error: "status is required"
         }),
+     
       
     })
 })
@@ -34,8 +35,7 @@ const Userupdate = z.object({
         role: z.string().optional(),
         contactNo: z.string().optional(),
         address: z.string().optional(),
-        profileImg:z.string().optional(),
-      
+        status: z.string().optional(), 
     })
 })
 
