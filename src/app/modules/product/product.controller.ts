@@ -53,11 +53,11 @@ const findSingleProduct = catchAsync(async (req:Request,res:Response)=>{
 
 
 const updateSingleProduct = catchAsync(async (req:Request,res:Response)=>{
-  const {oldproductimage} = req.body
-  if(oldproductimage?.mediaId){
+  const {oldproductimage,productImage} = req.body
+  if(oldproductimage?.mediaId !== productImage?.mediaId){
     await cloudinaryDestroy(oldproductimage?.mediaId)
-
   }
+
   const body = req.body;
   delete req.body.oldproductimage
   const {id}= req.params
