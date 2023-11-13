@@ -27,7 +27,7 @@ const getAllcategory = async (
 
   if(searchTerm){
       andConditons.push({
-          OR:CategorySearchFields.map((field) => ({
+          OR:CategorySearchFields?.map((field) => ({
               [field]:{
                   contains:searchTerm,
                   mode:'insensitive'
@@ -38,7 +38,7 @@ const getAllcategory = async (
  
   if (Object.keys(filterData).length > 0) {
       andConditons.push({
-          AND: Object.keys(filterData).map((key) => ({
+          AND: Object.keys(filterData)?.map((key) => ({
               [key]: {
                   equals: (filterData as any)[key]
               }
@@ -49,7 +49,7 @@ const getAllcategory = async (
   const whereConditons: Prisma.CategoryWhereInput =
       andConditons.length > 0 ? { AND: andConditons } : {};
 
-  const result = await prisma.category.findMany({
+  const result = await prisma?.category?.findMany({
       where: whereConditons,
       skip,
       take: limit,
@@ -62,7 +62,7 @@ const getAllcategory = async (
           }
   });
 
-  const total = await prisma.category.count();
+  const total = await prisma.category?.count();
 
   return {
       meta: {
@@ -78,7 +78,7 @@ const getAllcategory = async (
 }
 
 const getSinglecategory = async (id: string) => {
-  const Category = await prisma.category.findUnique({
+  const Category = await prisma?.category?.findUnique({
     where: {
       id,
     },

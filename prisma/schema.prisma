@@ -8,16 +8,17 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(uuid())
-  username   String   @unique
-  password   String  
-  email      String?
-  role       RoleUser @default(admin)
-  contactNo  String
-  address    String
-  status     Status  @default(open)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id        String   @id @default(uuid())
+  username  String   @unique
+  password  String
+  email     String?
+  role      RoleUser @default(admin)
+  contactNo String
+  address   String
+  status    Status   @default(open)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Order     Order[]
 
   @@map("users")
 }
@@ -32,28 +33,43 @@ model Category {
   @@map("categoryes")
 }
 
-
-
 model Product {
-  id           String    @id @default(uuid())
+  id           String   @id @default(uuid())
   name         String
   price        String
   flavor       String?
   productImage Json?
   discount     String?
   size         String?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
   categoryId   String
-  category     Category  @relation(fields: [categoryId], references: [id])
+  category     Category @relation(fields: [categoryId], references: [id])
 
   @@map("products")
+}
+
+model Order {
+  id             String   @id @default(uuid())
+  cart           Json
+  changeReturn   String
+  discount       Int
+  grandTotal     Int
+  paymentMethod  String
+  receivedAmount Int
+  shipping       Int
+  tax            Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
 }
 
 enum RoleUser {
   admin
   saler
 }
+
 enum Status {
   open
   close

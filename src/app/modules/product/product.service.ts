@@ -28,8 +28,8 @@ const getAllproduct = async (
   const andConditons = [];
 
   if(searchTerm){
-      andConditons.push({
-          OR:ProductSearchFields.map((field) => ({
+      andConditons?.push({
+          OR:ProductSearchFields?.map((field) => ({
               [field]:{
                   contains:searchTerm,
                   mode:'insensitive'
@@ -38,9 +38,9 @@ const getAllproduct = async (
       })
   }
  
-  if (Object.keys(filterData).length > 0) {
+  if (Object.keys(filterData)?.length > 0) {
       andConditons.push({
-          AND: Object.keys(filterData).map((key) => ({
+          AND: Object?.keys(filterData)?.map((key) => ({
               [key]: {
                   equals: (filterData as any)[key]
               }
@@ -50,7 +50,6 @@ const getAllproduct = async (
 
   const whereConditons: Prisma.ProductWhereInput =
       andConditons.length > 0 ? { AND: andConditons } : {};
-
   const result = await prisma.product.findMany({
       where: whereConditons,
       include: {
@@ -67,7 +66,7 @@ const getAllproduct = async (
           }
   });
 
-  const total = await prisma.product.count();
+  const total = await prisma?.product?.count();
 
   return {
       meta: {
