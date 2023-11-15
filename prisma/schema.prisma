@@ -67,7 +67,8 @@ model Order {
 
 enum RoleUser {
   admin
-  saler
+  seller
+  
 }
 
 enum Status {

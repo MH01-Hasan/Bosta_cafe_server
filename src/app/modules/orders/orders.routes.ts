@@ -12,10 +12,13 @@ router.post(
   // auth(ENUM_USER_ROLE.ADMIN),
   OrdersController.createOrders,
 );
-// router.get('/', OrdersController.getAllproduct)
+router.get('/', OrdersController.getAllOrders)
 
 
-// router.get('/:id', OrdersController.findSingleProduct,);
+// router.get('/:userId', OrdersController.findAllOrdersbyShopID);
+
+router.get('/:id', OrdersController.findSingrlOrdrs);
+
 
 // router.patch(
 //   '/:id',

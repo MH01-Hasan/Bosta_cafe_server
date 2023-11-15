@@ -2,7 +2,9 @@ import { Order } from "@prisma/client";
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 import catchAsync from "../../../shared/catchAsync";
+import pick from "../../../shared/pick";
 import sendResponse from "../../../shared/sendResponse";
+import { OrdersFilterFileds } from "./orders.contants";
 import { OrdeersService } from "./orders.service";
 
 const createOrders = catchAsync(async (req:Request,res:Response)=>{
@@ -20,35 +22,51 @@ const createOrders = catchAsync(async (req:Request,res:Response)=>{
 
 
 
-// const getAllproduct = catchAsync(async (req:Request,res:Response)=>{
-//   const filters = pick(req.query,ProductFilterFileds);
-//    const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
-//    const result = await ProductService.getAllproduct(filters, options);
-//    sendResponse<Product[]>(res,{ 
+const getAllOrders = catchAsync(async (req:Request,res:Response)=>{
+  const filters = pick(req.query,OrdersFilterFileds);
+  const {userId}= req.params
+   const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
+   const result = await OrdeersService.getAllOrders(filters, options,userId);
+   sendResponse<Order[]>(res,{ 
+    statusCode:httpStatus.OK,
+    success:true,
+    message:"Orders find successfully",
+      meta: result.meta,
+      data: result.data
+
+  })
+
+})
+
+
+
+// const findAllOrdersbyShopID = catchAsync(async (req:Request,res:Response)=>{
+//   const filters = pick(req.query,OrdersFilterFileds);
+
+//   const {userId}= req.params
+//   const result = await OrdeersService.findAllOrdersbyShopID(userId,filters);
+//   sendResponse<Order[]>(res,{ 
 //     statusCode:httpStatus.OK,
 //     success:true,
-//     message:"Product find successfully",
-//       meta: result.meta,
-//       data: result.data
-
-//   })
-
-// })
-
-
-
-// const findSingleProduct = catchAsync(async (req:Request,res:Response)=>{
-//   const {id}= req.params
-//   const result = await ProductService.findSingleProduct(id);
-//   sendResponse<Product>(res,{ 
-//     statusCode:httpStatus.OK,
-//     success:true,
-//     message:"Product find successfully",
+//     message:"Orders find successfully",
 //     data:result
 
 //   })
 
 // })
+
+const findSingrlOrdrs = catchAsync(async (req:Request,res:Response)=>{
+  const {id}= req.params
+  const result = await OrdeersService.findSingrlOrdrs(id);
+  sendResponse<Order>(res,{ 
+    statusCode:httpStatus.OK,
+    success:true,
+    message:"Orders find successfully",
+    data:result
+
+  })
+
+})
 
 
 // const updateSingleProduct = catchAsync(async (req:Request,res:Response)=>{
@@ -89,6 +107,9 @@ const createOrders = catchAsync(async (req:Request,res:Response)=>{
 
   export const OrdersController = {
     createOrders,
+    getAllOrders,
+    // findAllOrdersbyShopID,
+    findSingrlOrdrs
    
     
   };

@@ -10,7 +10,7 @@ import ApiError from '../../errors/ApiError';
 import handleClientError from '../../errors/handleClientError';
 import handleValidationError from '../../errors/handleValidationError';
 import { handleZodError } from '../../errors/handleZodError';
-import IGenericErrorMessage from '../../interfaces/error';
+import { IGenericErrorMessage } from '../../interfaces/error';
 
 
 const globalErrorHandler: ErrorRequestHandler = (
