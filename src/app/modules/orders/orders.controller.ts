@@ -24,9 +24,8 @@ const createOrders = catchAsync(async (req:Request,res:Response)=>{
 
 const getAllOrders = catchAsync(async (req:Request,res:Response)=>{
   const filters = pick(req.query,OrdersFilterFileds);
-  const {userId}= req.params
    const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
-   const result = await OrdeersService.getAllOrders(filters, options,userId);
+   const result = await OrdeersService.getAllOrders(filters, options);
    sendResponse<Order[]>(res,{ 
     statusCode:httpStatus.OK,
     success:true,
@@ -40,20 +39,20 @@ const getAllOrders = catchAsync(async (req:Request,res:Response)=>{
 
 
 
-// const findAllOrdersbyShopID = catchAsync(async (req:Request,res:Response)=>{
-//   const filters = pick(req.query,OrdersFilterFileds);
+const findAllOrdersbyShopID = catchAsync(async (req:Request,res:Response)=>{
+  const filters = pick(req.query,OrdersFilterFileds);
+  const {userId}= req.params
+  console.log(userId)
+  const result = await OrdeersService.findAllOrdersbyShopID(userId,filters);
+  sendResponse<Order[]>(res,{ 
+    statusCode:httpStatus.OK,
+    success:true,
+    message:"Orders find successfully",
+    data:result
 
-//   const {userId}= req.params
-//   const result = await OrdeersService.findAllOrdersbyShopID(userId,filters);
-//   sendResponse<Order[]>(res,{ 
-//     statusCode:httpStatus.OK,
-//     success:true,
-//     message:"Orders find successfully",
-//     data:result
+  })
 
-//   })
-
-// })
+})
 
 const findSingrlOrdrs = catchAsync(async (req:Request,res:Response)=>{
   const {id}= req.params
@@ -108,7 +107,7 @@ const findSingrlOrdrs = catchAsync(async (req:Request,res:Response)=>{
   export const OrdersController = {
     createOrders,
     getAllOrders,
-    // findAllOrdersbyShopID,
+    findAllOrdersbyShopID,
     findSingrlOrdrs
    
     

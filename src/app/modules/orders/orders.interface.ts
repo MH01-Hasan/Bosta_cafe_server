@@ -4,4 +4,5 @@ export type IOrdersFilterRequest = {
     createdAt?: string
     startDate?: string
     endDate?: string
+    userId?: string
 }

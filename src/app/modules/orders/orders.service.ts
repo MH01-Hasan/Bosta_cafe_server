@@ -17,70 +17,128 @@ const createOrders = async (payload:Order ): Promise<Order> => {
     });
     return result;
   };
-const getAllOrders = async (
-  filters:IOrdersFilterRequest,
-  options:IPaginationOptions,
-  userId:string
-
-):Promise< IGenericResponse <Order[]>> =>{
-  const{page,limit,skip} = paginationHelpers.calculatePagination(options);
-  const {searchTerm,startDate, endDate, ...filterData} = filters;
-  const andConditons = [];
-
-  if(searchTerm){
-      andConditons?.push({
-          OR:OrdersSearchFields?.map((field) => ({
-              [field]:{
-                  contains:searchTerm,
-                  mode:'insensitive'
-              }
-          }))
-      })
-  }
-
-  if (startDate && endDate) {
-    andConditons?.push({
-      createdAt: {
-        gte: startDate,
-        lte: endDate,
-      },
-    });
-  }
 
 
-if (userId) {
-  const user = await prisma.user.findUnique({
-    where: {
-      id: userId,
-    },
-  });
-  if (user && user.role === 'seller') {
-    if (userId) {
-      andConditons?.push({
-        userId: userId,
+
+
+  const getAllOrders = async (
+    filters: IOrdersFilterRequest,
+    options: IPaginationOptions,
+  ): Promise<IGenericResponse<Order[]>> => {
+    const { page, limit, skip } = paginationHelpers.calculatePagination(options);
+    const { searchTerm, startDate, endDate, ...filterData } = filters;
+    const andConditions = [];
+  
+    if (searchTerm) {
+      andConditions.push({
+        OR: OrdersSearchFields?.map((field) => ({
+          [field]: {
+            contains: searchTerm,
+            mode: 'insensitive',
+          },
+        })),
       });
     }
-  }
-}
-
+  
+    if (startDate && endDate) {
+      andConditions.push({
+        createdAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      });
+    }
+  
+    if (Object.keys(filterData).length > 0) {
+      andConditions.push({
+        AND: Object.keys(filterData).map((key) => ({
+          [key]: {
+            equals: (filterData as any)[key],
+          },
+        })),
+      });
+    }
+  
+    const whereConditions: Prisma.OrderWhereInput =
+      andConditions.length > 0 ? { AND: andConditions } : {};
+  
+    const result = await prisma.order.findMany({
+      where: whereConditions,
+      include: {
+        user: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            address: true,
+            contactNo: true,
+            role: true,
+          },
+        },
+      },
+      skip,
+      take: limit,
+      orderBy:
+        options.sortBy && options.sortOrder
+          ? {
+              [options.sortBy]: options.sortOrder,
+            }
+          : {
+              createdAt: 'desc',
+            },
+    });
+  
+    const total =  result.length;
+  
+    return {
+      meta: {
+        page,
+        limit,
+        total,
+      },
+      data: result,
+    };
+  };
   
 
+
+  const findAllOrdersbyShopID = async (userId: string, filters:IOrdersFilterRequest,): Promise<Order[] | null> => {
+    const {searchTerm,startDate, endDate, } = filters;
+
+    const andConditons = [];
+
+    if(searchTerm){
+        andConditons?.push({
+            OR:OrdersSearchFields?.map((field) => ({
+                [field]:{
+                    contains:searchTerm,
+                    mode:'insensitive'
+                }
+            }))
+        })
+    }
   
+    if (startDate && endDate) {
+      andConditons?.push({
+        createdAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      });
+    }
+  
+    if(userId){
+        andConditons?.push({
+          userId:userId
+        })
+    }
+    const whereConditions: Prisma.OrderWhereInput =
+    andConditons.length > 0 ? { AND: andConditons } : {};
 
-  if (Object.keys(filterData)?.length > 0) {
-      andConditons.push({
-          AND: Object?.keys(filterData)?.map((key) => ({
-              [key]: {
-                  equals: (filterData as any)[key]
-              }
-          }))
-      })
-  }
-
-  const whereConditons: Prisma.OrderWhereInput =
-      andConditons.length > 0 ? { AND: andConditons } : {};
-  const result = await prisma.order.findMany({
-      where: whereConditons,
+    const result = await prisma.order.findMany({
+      where: {
+        AND: whereConditions
+      },
       include: {
         user: {
           select: {
@@ -88,88 +146,15 @@ if (userId) {
               username: true,
               email: true,
               address: true,
-              contactNo: true,         
+              contactNo: true, 
+              role: true,        
           }
-      }
-              },
-      skip,
-      take: limit,
-      orderBy: options.sortBy && options.sortOrder
-          ? {
-              [options.sortBy]: options.sortOrder
-          }
-          : {
-              createdAt: 'desc'
-          }
-  });
+      } },
+    })
 
-  const total = await prisma?.order?.count();
-
-  return {
-      meta: {
-          page,
-          limit,
-          total,
-      },
-      data: result
-  }
-
-
-
-}
-
-
-  // const findAllOrdersbyShopID = async (userId: string, filters:IOrdersFilterRequest,): Promise<Order[] | null> => {
-  //   const {searchTerm,startDate, endDate, } = filters;
-  //   const andConditons = [];
-
-  //   if(searchTerm){
-  //       andConditons?.push({
-  //           OR:OrdersSearchFields?.map((field) => ({
-  //               [field]:{
-  //                   contains:searchTerm,
-  //                   mode:'insensitive'
-  //               }
-  //           }))
-  //       })
-  //   }
+    return result
   
-  //   if (startDate && endDate) {
-  //     andConditons?.push({
-  //       createdAt: {
-  //         gte: startDate,
-  //         lte: endDate,
-  //       },
-  //     });
-  //   }
-
-
-  //   if(userId){
-  //     andConditons?.push({
-  //       userId:userId
-  //     })
-  //   }
-
-  
-  //   const result = await prisma.order.findMany({
-  //     where: {
-  //       AND: andConditons
-  //     },
-  //     include: {
-  //       user: {
-  //         select: {
-  //             id: true,
-  //             username: true,
-  //             email: true,
-  //             address: true,
-  //             contactNo: true,         
-  //         }
-  //     } },
-  //   })
-
-  //   return result
-  
-  // };
+  };
 
   const findSingrlOrdrs = async (id: string): Promise<Order | null> => {
     const result = await prisma.order.findUnique({
@@ -228,7 +213,7 @@ if (userId) {
   export const OrdeersService = {
     createOrders,
     getAllOrders,
-    // findAllOrdersbyShopID,
+    findAllOrdersbyShopID,
     findSingrlOrdrs
    
     
