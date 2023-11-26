@@ -1,3 +1,3 @@
-export const OrdersSearchFields = ['id','paymentMethod'];
+export const OrdersSearchFields = ['id','paymentMethod','orderId'];
 
-export const  OrdersFilterFileds = ['searchTerm','userId', 'orderid', 'createdAt',"startDate", "endDate"];
+export const  OrdersFilterFileds = ['searchTerm','userId', 'orderId', 'createdAt',"startDate", "endDate"];

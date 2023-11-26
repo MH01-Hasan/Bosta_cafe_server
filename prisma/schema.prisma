@@ -51,14 +51,13 @@ model Product {
 
 model Order {
   id             String   @id @default(uuid())
+  orderId        String
   cart           Json
   changeReturn   String
   discount       Int
   grandTotal     Int
   paymentMethod  String
   receivedAmount Int
-  shipping       Int
-  tax            Int
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   userId         String

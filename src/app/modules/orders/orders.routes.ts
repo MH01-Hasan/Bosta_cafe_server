@@ -14,14 +14,14 @@ router.post(
   auth(ENUM_USER_ROLE.SELLER),
   OrdersController.createOrders,
 );
+
 router.get('/',
-auth(ENUM_USER_ROLE.ADMIN),
+// auth(ENUM_USER_ROLE.ADMIN),
  OrdersController.getAllOrders)
 
 
 router.get('/:userId',
-auth(ENUM_USER_ROLE.SELLER),
-auth(ENUM_USER_ROLE.ADMIN),
+// auth(ENUM_USER_ROLE.SELLER),
  OrdersController.findAllOrdersbyShopID);
 
 router.get('/:id', OrdersController.findSingrlOrdrs);

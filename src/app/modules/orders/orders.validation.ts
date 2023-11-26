@@ -2,9 +2,11 @@ import { z } from "zod";
 
 const create = z.object({
     body: z.object({
+        orderId: z.string({required_error: "orderId is Requerd"}),
         cart: z.object({
             
         }),
+        
         changeReturn: z.string({
             required_error: "changeReturn is change Return"
         }),
@@ -20,12 +22,6 @@ const create = z.object({
         }),
         receivedAmount: z.number({
             required_error: "receivedAmount is required"
-        }),
-        shipping: z.number({
-            required_error: "shipping is required"
-        }),
-        tax: z.number({
-            required_error: "tax is required"
         }),
 
         userId: z.string({

@@ -26,6 +26,7 @@ const getAllOrders = catchAsync(async (req:Request,res:Response)=>{
   const filters = pick(req.query,OrdersFilterFileds);
    const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
    const result = await OrdeersService.getAllOrders(filters, options);
+
    sendResponse<Order[]>(res,{ 
     statusCode:httpStatus.OK,
     success:true,
@@ -42,8 +43,8 @@ const getAllOrders = catchAsync(async (req:Request,res:Response)=>{
 const findAllOrdersbyShopID = catchAsync(async (req:Request,res:Response)=>{
   const filters = pick(req.query,OrdersFilterFileds);
   const {userId}= req.params
-  console.log(userId)
   const result = await OrdeersService.findAllOrdersbyShopID(userId,filters);
+  console.log(result)
   sendResponse<Order[]>(res,{ 
     statusCode:httpStatus.OK,
     success:true,

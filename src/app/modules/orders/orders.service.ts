@@ -5,8 +5,7 @@ import { IPaginationOptions } from "../../../interfaces/pagination";
 import { prisma } from "../../../shared/prisma";
 import { OrdersSearchFields } from "./orders.contants";
 import { IOrdersFilterRequest } from "./orders.interface";
-
-
+//@ts-ignore
 
 const createOrders = async (payload:Order ): Promise<Order> => {
     const result = await prisma.order.create({
@@ -22,11 +21,14 @@ const createOrders = async (payload:Order ): Promise<Order> => {
 
 
   const getAllOrders = async (
+    
     filters: IOrdersFilterRequest,
     options: IPaginationOptions,
   ): Promise<IGenericResponse<Order[]>> => {
     const { page, limit, skip } = paginationHelpers.calculatePagination(options);
     const { searchTerm, startDate, endDate, ...filterData } = filters;
+  
+
     const andConditions = [];
   
     if (searchTerm) {
@@ -39,16 +41,40 @@ const createOrders = async (payload:Order ): Promise<Order> => {
         })),
       });
     }
-  
-    if (startDate && endDate) {
-      andConditions.push({
+    
+    const utcDate = new Date().toLocaleString().split(",")[0]+" 00:00:00 AM";
+    const bstTimeZone = "Asia/Dhaka";
+    const bstDate = new Date(utcDate.toLocaleString('en-US', { timeZone: bstTimeZone }));
+
+    if (!startDate && !endDate) {
+      andConditions?.push({
         createdAt: {
-          gte: startDate,
-          lte: endDate,
+          gte:new Date(bstDate).toISOString()
+          ,
+          lte:`${new Date(bstDate).toISOString().split('T')[0]}T23:59:59.000Z`,
         },
       });
     }
-  
+   
+    const utcDate2 = new Date(startDate).toLocaleString().split(",")[0]+" 00:00:00 AM";
+    const bstTimeZone2 = "Asia/Dhaka";
+    const bstDate2 = new Date(utcDate2.toLocaleString('en-US', { timeZone: bstTimeZone2 }));
+
+    const utcDate3 = new Date(endDate).toLocaleString().split(",")[0]+" 11:59:59 PM";
+    const bstTimeZone3 = "Asia/Dhaka";
+    const bstDate3 = new Date(utcDate3.toLocaleString('en-US', { timeZone: bstTimeZone3 }));
+
+    if (startDate && endDate) {
+      andConditions?.push({
+        createdAt: {
+          gte: new Date(bstDate2).toISOString(),
+          lte: new Date(bstDate3).toISOString(),
+        },
+      });
+    }
+
+   
+
     if (Object.keys(filterData).length > 0) {
       andConditions.push({
         AND: Object.keys(filterData).map((key) => ({
@@ -58,10 +84,9 @@ const createOrders = async (payload:Order ): Promise<Order> => {
         })),
       });
     }
-  
+   
     const whereConditions: Prisma.OrderWhereInput =
       andConditions.length > 0 ? { AND: andConditions } : {};
-  
     const result = await prisma.order.findMany({
       where: whereConditions,
       include: {
@@ -106,7 +131,11 @@ const createOrders = async (payload:Order ): Promise<Order> => {
     const {searchTerm,startDate, endDate, } = filters;
 
     const andConditons = [];
-
+    if(userId){
+      andConditons?.push({
+        userId:userId
+      })
+  }
     if(searchTerm){
         andConditons?.push({
             OR:OrdersSearchFields?.map((field) => ({
@@ -117,21 +146,40 @@ const createOrders = async (payload:Order ): Promise<Order> => {
             }))
         })
     }
-  
-    if (startDate && endDate) {
+
+    const utcDate = new Date().toLocaleString().split(",")[0]+" 00:00:00 AM";
+    const bstTimeZone = "Asia/Dhaka";
+    const bstDate = new Date(utcDate.toLocaleString('en-US', { timeZone: bstTimeZone }));
+
+    if (!startDate && !endDate) {
       andConditons?.push({
         createdAt: {
-          gte: startDate,
-          lte: endDate,
+          gte:new Date(bstDate).toISOString()
+          ,
+          lte:`${new Date(bstDate).toISOString().split('T')[0]}T23:59:59.000Z`,
         },
       });
     }
-  
-    if(userId){
-        andConditons?.push({
-          userId:userId
-        })
+   
+    const utcDate2 = new Date(startDate).toLocaleString().split(",")[0]+" 00:00:00 AM";
+    const bstTimeZone2 = "Asia/Dhaka";
+    const bstDate2 = new Date(utcDate2.toLocaleString('en-US', { timeZone: bstTimeZone2 }));
+
+    const utcDate3 = new Date(endDate).toLocaleString().split(",")[0]+" 11:59:59 PM";
+    const bstTimeZone3 = "Asia/Dhaka";
+    const bstDate3 = new Date(utcDate3.toLocaleString('en-US', { timeZone: bstTimeZone3 }));
+
+    if (startDate && endDate) {
+      andConditons?.push({
+        createdAt: {
+          gte: new Date(bstDate2).toISOString(),
+          lte: new Date(bstDate3).toISOString(),
+        },
+      });
     }
+   
+   
+
     const whereConditions: Prisma.OrderWhereInput =
     andConditons.length > 0 ? { AND: andConditons } : {};
 
