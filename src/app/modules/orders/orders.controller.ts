@@ -43,13 +43,14 @@ const getAllOrders = catchAsync(async (req:Request,res:Response)=>{
 const findAllOrdersbyShopID = catchAsync(async (req:Request,res:Response)=>{
   const filters = pick(req.query,OrdersFilterFileds);
   const {userId}= req.params
-  const result = await OrdeersService.findAllOrdersbyShopID(userId,filters);
-  console.log(result)
+  const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
+  const result = await OrdeersService.findAllOrdersbyShopID(userId,filters,options);
   sendResponse<Order[]>(res,{ 
     statusCode:httpStatus.OK,
     success:true,
     message:"Orders find successfully",
-    data:result
+      meta: result?.meta,
+      data: result?.data
 
   })
 
@@ -68,39 +69,6 @@ const findSingrlOrdrs = catchAsync(async (req:Request,res:Response)=>{
 
 })
 
-
-// const updateSingleProduct = catchAsync(async (req:Request,res:Response)=>{
-//   const {oldproductimage,productImage} = req.body
-//   if(oldproductimage?.mediaId !== productImage?.mediaId){
-//     await cloudinaryDestroy(oldproductimage?.mediaId)
-//   }
-
-//   const body = req.body;
-//   delete req.body.oldproductimage
-//   const {id}= req.params
-//   const result = await ProductService.updateSingleProduct(id,body);
-//   sendResponse<Product>(res,{ 
-//     statusCode:httpStatus.OK,
-//     success:true,
-//     message:"Product Update successfully",
-//     data:result
-
-//   })
-
-// })
-
-// const deleteSingleProduct = catchAsync(async (req:Request,res:Response)=>{
-//   const {id}= req.params
-//   const result = await ProductService.deleteSingleProduct(id);
-//   sendResponse<Product>(res,{ 
-//     statusCode:httpStatus.OK,
-//     success:true,
-//     message:"Product Delete successfully",
-//     data:result
-
-//   })
-
-// })
 
 
 

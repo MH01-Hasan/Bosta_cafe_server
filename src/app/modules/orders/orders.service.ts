@@ -21,12 +21,11 @@ const createOrders = async (payload:Order ): Promise<Order> => {
 
 
   const getAllOrders = async (
-    
     filters: IOrdersFilterRequest,
     options: IPaginationOptions,
   ): Promise<IGenericResponse<Order[]>> => {
     const { page, limit, skip } = paginationHelpers.calculatePagination(options);
-    const { searchTerm, startDate, endDate, ...filterData } = filters;
+    const { searchTerm, startDate, endDate, userId, ...filterData } = filters;
   
 
     const andConditions = [];
@@ -42,20 +41,7 @@ const createOrders = async (payload:Order ): Promise<Order> => {
       });
     }
     
-    const utcDate = new Date().toLocaleString().split(",")[0]+" 00:00:00 AM";
-    const bstTimeZone = "Asia/Dhaka";
-    const bstDate = new Date(utcDate.toLocaleString('en-US', { timeZone: bstTimeZone }));
-
-    if (!startDate && !endDate) {
-      andConditions?.push({
-        createdAt: {
-          gte:new Date(bstDate).toISOString()
-          ,
-          lte:`${new Date(bstDate).toISOString().split('T')[0]}T23:59:59.000Z`,
-        },
-      });
-    }
-   
+ 
     const utcDate2 = new Date(startDate).toLocaleString().split(",")[0]+" 00:00:00 AM";
     const bstTimeZone2 = "Asia/Dhaka";
     const bstDate2 = new Date(utcDate2.toLocaleString('en-US', { timeZone: bstTimeZone2 }));
@@ -71,6 +57,12 @@ const createOrders = async (payload:Order ): Promise<Order> => {
           lte: new Date(bstDate3).toISOString(),
         },
       });
+    }
+
+    if(userId){
+      andConditions?.push({
+        userId:userId
+      })
     }
 
    
@@ -113,8 +105,8 @@ const createOrders = async (payload:Order ): Promise<Order> => {
             },
     });
   
-    const total =  result.length;
-  
+    const total = result.length;
+    
     return {
       meta: {
         page,
@@ -127,9 +119,9 @@ const createOrders = async (payload:Order ): Promise<Order> => {
   
 
 
-  const findAllOrdersbyShopID = async (userId: string, filters:IOrdersFilterRequest,): Promise<Order[] | null> => {
+  const findAllOrdersbyShopID = async (userId: string, filters:IOrdersFilterRequest,options:IPaginationOptions): Promise<Order[] | null> => {
     const {searchTerm,startDate, endDate, } = filters;
-
+    const { page, limit, skip } = paginationHelpers.calculatePagination(options);
     const andConditons = [];
     if(userId){
       andConditons?.push({
@@ -147,19 +139,7 @@ const createOrders = async (payload:Order ): Promise<Order> => {
         })
     }
 
-    const utcDate = new Date().toLocaleString().split(",")[0]+" 00:00:00 AM";
-    const bstTimeZone = "Asia/Dhaka";
-    const bstDate = new Date(utcDate.toLocaleString('en-US', { timeZone: bstTimeZone }));
 
-    if (!startDate && !endDate) {
-      andConditons?.push({
-        createdAt: {
-          gte:new Date(bstDate).toISOString()
-          ,
-          lte:`${new Date(bstDate).toISOString().split('T')[0]}T23:59:59.000Z`,
-        },
-      });
-    }
    
     const utcDate2 = new Date(startDate).toLocaleString().split(",")[0]+" 00:00:00 AM";
     const bstTimeZone2 = "Asia/Dhaka";
@@ -198,9 +178,28 @@ const createOrders = async (payload:Order ): Promise<Order> => {
               role: true,        
           }
       } },
+      skip,
+      take: limit,
+      orderBy:
+        options.sortBy && options.sortOrder
+          ? {
+              [options.sortBy]: options.sortOrder,
+            }
+          : {
+              createdAt: 'desc',
+            },
     })
 
-    return result
+    const total =  result.length;
+  
+    return {
+      meta: {
+        page,
+        limit,
+        total,
+      },
+      data: result,
+    };
   
   };
 
@@ -225,38 +224,7 @@ const createOrders = async (payload:Order ): Promise<Order> => {
   };
 
 
-// const updateSingleProduct = async (id: string, payload: Partial<Product>): Promise<Product> => {
 
-
- 
-//   const result = await prisma.product.update({
-//     where: {
-//       id,
-//     },
-//     data:{
-//       ...payload,
-//       productImage:payload.productImage as Prisma.JsonObject
-//     },
-//     include: {
-//       category: true,
-//     },
-//   });
-
-//   return result;
-// };
-
-
-// const deleteSingleProduct = async (id: string): Promise<Product> => {
-//   const result = await prisma.product.delete({
-//     where: {
-//       id
-//     },
-//     include: {
-//       category: true,
-//     },
-//   })
-//   return result;
-// };
 
   export const OrdeersService = {
     createOrders,
