@@ -24,7 +24,7 @@ router.get('/:userId',
 // auth(ENUM_USER_ROLE.SELLER),
  OrdersController.findAllOrdersbyShopID);
 
-router.get('/:id', OrdersController.findSingrlOrdrs);
+router.get('/order/:id', OrdersController.findSingrlOrdrs);
 
 
 // router.patch(

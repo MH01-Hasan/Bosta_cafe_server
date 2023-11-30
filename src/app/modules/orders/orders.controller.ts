@@ -59,10 +59,10 @@ const findAllOrdersbyShopID = catchAsync(async (req:Request,res:Response)=>{
 const findSingrlOrdrs = catchAsync(async (req:Request,res:Response)=>{
   const {id}= req.params
   const result = await OrdeersService.findSingrlOrdrs(id);
-  sendResponse<Order>(res,{ 
+  sendResponse(res,{ 
     statusCode:httpStatus.OK,
     success:true,
-    message:"Orders find successfully",
+    message:"Order successfully",
     data:result
 
   })

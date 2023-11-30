@@ -1,4 +1,6 @@
 import express from 'express';
+import { ENUM_USER_ROLE } from '../../../enums/user';
+import auth from '../../middlewares/auth';
 import { validateRequest } from '../../middlewares/validateRequest';
 import { categoryController } from './category.controller';
 import { categoryValidation } from './category.validation';
@@ -9,7 +11,7 @@ const router = express.Router();
 router.post(
   '/',
   validateRequest(categoryValidation.create),
-  // auth(ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.ADMIN),
   categoryController.createcategory,
 );
 router.get('/', categoryController.getAllcategory);
